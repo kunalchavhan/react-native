@@ -526,6 +526,8 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithFrame : (CGRect)frame)
 
   _nativeEventCount++;
 
+    NSLog(@"## Text input changed");
+    
   if (_onChange) {
     _onChange(@{
       @"text" : [self.attributedText.string copy],

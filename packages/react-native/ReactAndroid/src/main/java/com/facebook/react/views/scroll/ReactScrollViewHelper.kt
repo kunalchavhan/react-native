@@ -11,6 +11,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Point
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.OverScroller
@@ -104,12 +105,21 @@ public object ReactScrollViewHelper {
       yVelocity: Float,
       experimental_isSynchronous: Boolean = false,
   ) where T : HasScrollEventThrottle?, T : ViewGroup {
+    Log.d("SCROLL_TAG", "Inside emit scroll")
     val now = System.currentTimeMillis()
     // Throttle the scroll event if scrollEventThrottle is set to be equal or more than 17 ms.
     // We limit the delta to 17ms so that small throttles intended to enable 60fps updates will not
     // inadvertently filter out any scroll events.
+    Log.d("SCROLL_TAG", "NOW " + now);
+    Log.d("SCROLL_TAG", "xVelocity " + xVelocity);
+    Log.d("SCROLL_TAG", "yVelocity " + yVelocity);
+    Log.d("SCROLL_TAG", "ACTION " + scrollEventType);
+    Log.d("SCROLL_TAG", "Last Dispatch " + scrollView.lastScrollDispatchTime);
     if (scrollView.scrollEventThrottle >= Math.max(17, now - scrollView.lastScrollDispatchTime)) {
       // Scroll events are throttled.
+      Log.d("SCROLL_TAG", "Scroll events are throttled");
+      Log.d("SCROLL_TAG", "Last Scroll Dispatch " + scrollView.lastScrollDispatchTime);
+      Log.d("SCROLL_TAG", "Throttle value " + scrollView.scrollEventThrottle);
       return
     }
     val contentView = scrollView.getChildAt(0) ?: return

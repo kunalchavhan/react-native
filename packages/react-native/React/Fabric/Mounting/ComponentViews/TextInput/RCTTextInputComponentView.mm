@@ -628,7 +628,7 @@ static NSSet<NSNumber *> *returnKeyTypesSet;
   }
   UITextRange *selectedRange = _backedTextInputView.selectedTextRange;
   NSInteger oldTextLength = _backedTextInputView.attributedText.string.length;
-  _backedTextInputView.attributedText = attributedString;
+    _backedTextInputView.attributedText = attributedString;
   // Updating the UITextView attributedText, for example changing the lineHeight, the color or adding
   // a new paragraph with \n, causes the cursor to move to the end of the Text and scroll.
   // This is fixed by restoring the cursor position and scrolling to that position (iOS issue 652653).

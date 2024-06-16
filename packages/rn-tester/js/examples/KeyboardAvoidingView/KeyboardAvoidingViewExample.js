@@ -23,6 +23,7 @@ const {
   TextInput,
   TouchableOpacity,
   View,
+  Keyboard,
 } = require('react-native');
 
 const onButtonPress = () => {
@@ -32,8 +33,16 @@ const onButtonPress = () => {
 const TextInputForm = () => {
   return (
     <View>
-      <TextInput placeholder="Email" style={styles.textInput} />
-      <TextInput placeholder="Username" style={styles.textInput} />
+      <TextInput
+        placeholder="Email"
+        style={styles.textInput}
+        keyboardType={'email-address'}
+      />
+      <TextInput
+        placeholder="Username"
+        style={styles.textInput}
+        keyboardType={'numeric'}
+      />
       <TextInput placeholder="Password" style={styles.textInput} />
       <TextInput placeholder="Confirm Password" style={styles.textInput} />
       <Button
@@ -65,9 +74,37 @@ const CloseButton = (
   );
 };
 
+let count = 0;
+
 const KeyboardAvoidingViewBehaviour = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [behavior, setBehavior] = useState('padding');
+
+  React.useEffect(logKeyboardMetircs, []);
+
+  React.useEffect(initKeyboardEvent('keyboardWillChangeFrame'), []);
+  React.useEffect(initKeyboardEvent('keyboardDidChangeFrame'), []);
+  function initKeyboardEvent(event) {
+    return () => {
+      const subscription = Keyboard.addListener(event, val =>
+        console.log('## Event Called:', event, ':', val.endCoordinates.height),
+      );
+      return () => subscription.remove();
+    };
+  }
+
+  function logKeyboardMetircs() {
+    const id = setInterval(
+      () =>
+        console.log(
+          `## [${count++}] Keyboard Height:`,
+          Keyboard.metrics()?.height,
+        ),
+      2000,
+    );
+    return () => clearInterval(id);
+  }
+
   return (
     <View style={styles.outerContainer}>
       <Modal animationType="fade" visible={modalOpen}>

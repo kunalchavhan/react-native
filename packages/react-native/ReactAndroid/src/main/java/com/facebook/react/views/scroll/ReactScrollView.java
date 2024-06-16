@@ -21,6 +21,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -438,6 +439,7 @@ public class ReactScrollView extends ScrollView
   protected void handleInterceptedTouchEvent(MotionEvent ev) {
     NativeGestureUtil.notifyNativeGestureStarted(this, ev);
     ReactScrollViewHelper.emitScrollBeginDragEvent(this);
+    Log.d("SCROLL_TAG", "Received intercepted touch event");
     mDragging = true;
     enableFpsListener();
     getFlingAnimator().cancel();
@@ -445,6 +447,7 @@ public class ReactScrollView extends ScrollView
 
   @Override
   public boolean onTouchEvent(MotionEvent ev) {
+    Log.d("SCROLL_TAG", "on touch received");
     if (!mScrollEnabled) {
       return false;
     }
@@ -456,9 +459,11 @@ public class ReactScrollView extends ScrollView
 
     mVelocityHelper.calculateVelocity(ev);
     int action = ev.getActionMasked();
+    Log.d("SCROLL_TAG", "on touch received with action " + action);
+    Log.d("SCROLL_TAG", "on touch received with dragging " + mDragging);
     if (action == MotionEvent.ACTION_UP && mDragging) {
       ReactScrollViewHelper.updateFabricScrollState(this);
-
+      Log.d("SCROLL_TAG", "will emit scroll end drag");
       float velocityX = mVelocityHelper.getXVelocity();
       float velocityY = mVelocityHelper.getYVelocity();
       ReactScrollViewHelper.emitScrollEndDragEvent(this, velocityX, velocityY);
@@ -538,9 +543,11 @@ public class ReactScrollView extends ScrollView
 
   @Override
   public void fling(int velocityY) {
+    Log.d("SCROLL_TAG", "Fling detected with velocity " + velocityY);
     final int correctedVelocityY = correctFlingVelocityY(velocityY);
 
     if (mPagingEnabled) {
+      Log.d("SCROLL_TAG", "Paging enabled");
       flingAndSnap(correctedVelocityY);
     } else if (mScroller != null) {
       // FB SCROLLVIEW CHANGE
@@ -552,7 +559,6 @@ public class ReactScrollView extends ScrollView
       // as there is content. See #onOverScrolled() to see the second part of this change which
       // properly
       // aborts the scroller animation when we get to the bottom of the ScrollView content.
-
       int scrollWindowHeight = getHeight() - getPaddingBottom() - getPaddingTop();
 
       mScroller.fling(

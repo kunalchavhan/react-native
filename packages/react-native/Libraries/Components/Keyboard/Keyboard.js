@@ -115,9 +115,13 @@ class Keyboard {
 
   constructor() {
     this.addListener('keyboardDidShow', ev => {
+      console.log(`## Keyboard coordinates ${JSON.stringify(ev)}`);
       this._currentlyShowing = ev;
     });
     this.addListener('keyboardDidHide', _ev => {
+      console.log(
+        `## Keyboard cordinates after didHide ${JSON.stringify(_ev)}`,
+      );
       this._currentlyShowing = null;
     });
   }

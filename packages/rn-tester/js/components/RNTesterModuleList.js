@@ -13,7 +13,14 @@ import RNTPressableRow from './RNTPressableRow';
 
 const RNTesterExampleFilter = require('./RNTesterExampleFilter');
 const React = require('react');
-const {Platform, SectionList, StyleSheet, Text, View} = require('react-native');
+const {
+  Platform,
+  SectionList,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+} = require('react-native');
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
@@ -88,6 +95,20 @@ const renderSectionHeader = ({section}: {section: any, ...}) => (
   </RNTesterThemeContext.Consumer>
 );
 
+const footerComponent = () => {
+  return (
+    <Pressable
+      style={{height: 80, marginTop: 30}}
+      onPress={() => {
+        console.log('## Pressed');
+      }}>
+      <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+        {' '}
+        Throttle FlatList Test{' '}
+      </Text>
+    </Pressable>
+  );
+};
 const RNTesterModuleList: React$AbstractComponent<any, void> = React.memo(
   ({sections, handleModuleCardPress}) => {
     const filter = ({example, filterRegex, category}: any) =>
@@ -126,7 +147,7 @@ const RNTesterModuleList: React$AbstractComponent<any, void> = React.memo(
               keyboardDismissMode="on-drag"
               renderSectionHeader={renderSectionHeader}
               // eslint-disable-next-line react/no-unstable-nested-components
-              ListFooterComponent={() => <View style={{height: 80}} />}
+              ListFooterComponent={footerComponent}
             />
           )}
         />

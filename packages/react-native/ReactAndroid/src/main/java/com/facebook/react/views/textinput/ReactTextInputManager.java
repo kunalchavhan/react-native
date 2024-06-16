@@ -24,6 +24,7 @@ import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -663,7 +664,10 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
 
   @ReactProp(name = "selectTextOnFocus", defaultBoolean = false)
   public void setSelectTextOnFocus(ReactEditText view, boolean selectTextOnFocus) {
-    view.setSelectAllOnFocus(selectTextOnFocus);
+    Log.d("TEXT_MANAGER", "Select Text on Focus");
+    Log.d("TEXT_MANAGER", "Text focus " + System.currentTimeMillis());
+    view.setSelectTextOnFocus(selectTextOnFocus);
+    //view.setSelectAllOnFocus(selectTextOnFocus);
   }
 
   @ReactProp(name = ViewProps.COLOR, customType = "Color")
@@ -989,7 +993,10 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
 
   @ReactProp(name = "autoFocus", defaultBoolean = false)
   public void setAutoFocus(ReactEditText view, boolean autoFocus) {
+
+    Log.d("TEXT_MANAGER", "Auto Focus");
     view.setAutoFocus(autoFocus);
+
   }
 
   @ReactProp(name = ViewProps.TEXT_DECORATION_LINE)

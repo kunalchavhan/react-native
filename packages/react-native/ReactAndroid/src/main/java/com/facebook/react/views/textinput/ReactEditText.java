@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
 import android.text.method.QwertyKeyListener;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -130,6 +131,8 @@ public class ReactEditText extends AppCompatEditText {
   private static final KeyListener sKeyListener = QwertyKeyListener.getInstanceForFullKeyboard();
   private @Nullable EventDispatcher mEventDispatcher;
 
+  private boolean mSelectTextOnFocus = false;
+
   public ReactEditText(Context context) {
     super(context);
     setFocusableInTouchMode(false);
@@ -232,7 +235,14 @@ public class ReactEditText extends AppCompatEditText {
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    Log.d("TEXT_CLASS", "On Layout " + System.currentTimeMillis());
     onContentSizeChange();
+    // Check if select text on focus is enabled.
+    if (mSelectTextOnFocus) {
+      selectAll();
+      // Disallow selecting text on next layout pass
+      mSelectTextOnFocus = false;
+    }
   }
 
   @Override
@@ -1046,6 +1056,7 @@ public class ReactEditText extends AppCompatEditText {
 
     if (mAutoFocus && !mDidAttachToWindow) {
       requestFocusInternal();
+      Log.d("TEXT_CLASS", "Selecting all");
     }
 
     mDidAttachToWindow = true;
@@ -1118,6 +1129,11 @@ public class ReactEditText extends AppCompatEditText {
 
   public void setAutoFocus(boolean autoFocus) {
     mAutoFocus = autoFocus;
+  }
+
+  public void setSelectTextOnFocus(boolean selectTextOnFocus) {
+    mSelectTextOnFocus = selectTextOnFocus;
+    setSelectAllOnFocus(true);
   }
 
   protected void applyTextAttributes() {
@@ -1263,6 +1279,9 @@ public class ReactEditText extends AppCompatEditText {
     public void afterTextChanged(Editable s) {
       if (!mIsSettingTextFromJS && mListeners != null) {
         for (TextWatcher listener : mListeners) {
+          Log.d("TEXT_CLASS", "Text changed " + s);
+
+
           listener.afterTextChanged(s);
         }
       }
